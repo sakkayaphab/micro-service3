@@ -28,6 +28,7 @@ func main() {
 	if err!=nil {
 		log.Fatal(err)
 	}
+	collection := client.Database("mydatabase").Collection("messages")
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:   []string{"kafka:9092"},
 		Topic:     "message",
@@ -52,7 +53,6 @@ func main() {
 			log.Println(err)
 		} else {
 			fmt.Println(strconv.FormatInt(mm.MsgId, 10)+", "+mm.Sender+": "+mm.Msg+", "+time.Now().Format("2006-01-02T15:04:05.000Z"))
-			collection := client.Database("mydatabase").Collection("messages")
 			mm.ID = primitive.NewObjectID()
 			_, err = collection.InsertOne(ctx, mm)
 			if err!=nil {
