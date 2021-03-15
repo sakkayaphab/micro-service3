@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"os"
 	"strconv"
 	"time"
 )
@@ -21,16 +22,17 @@ type Message struct {
 }
 
 func main() {
-
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	fmt.Println(os.Getenv("MONGO"))
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://root:rootpassword@mongodb_container:27017"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO")))
 	if err!=nil {
 		log.Fatal(err)
 	}
+
 	collection := client.Database("mydatabase").Collection("messages")
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:   []string{"kafka:9092"},
+		Brokers:   []string{os.Getenv("KAFKA")},
 		Topic:     "message",
 		Partition: 0,
 		MinBytes:  10e3, // 10KB
@@ -44,6 +46,7 @@ func main() {
 	for {
 		m, err := r.ReadMessage(context.Background())
 		if err != nil {
+			log.Println(err)
 			break
 		}
 
@@ -54,7 +57,9 @@ func main() {
 		} else {
 			fmt.Println(strconv.FormatInt(mm.MsgId, 10)+", "+mm.Sender+": "+mm.Msg+", "+time.Now().Format("2006-01-02T15:04:05.000Z"))
 			mm.ID = primitive.NewObjectID()
-			_, err = collection.InsertOne(ctx, mm)
+			nCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			_, err = collection.InsertOne(nCtx, mm)
 			if err!=nil {
 				log.Println(err)
 			}
