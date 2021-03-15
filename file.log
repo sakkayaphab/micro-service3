@@ -1,0 +1,1 @@
+{"L":"FATAL","T":"2021-03-15T19:31:05.730+0700","caller":"app/app.go:50","M":"Server start failed :http: Server closed","S":"main.main.func1\n\t/Users/sakkayaphab/true/micro-service2/app/app.go:50"}
