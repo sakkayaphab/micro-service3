@@ -22,9 +22,9 @@ type Message struct {
 
 func main() {
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://root:rootpassword@mongodb_container:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://root:rootpassword@mongodb_container:27017/?authSource=admin"))
 	if err!=nil {
 		log.Fatal(err)
 	}
