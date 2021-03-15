@@ -38,10 +38,6 @@ func main() {
 		MinBytes:  10e3, // 10KB
 		MaxBytes:  10e6, // 10MB
 	})
-	err = r.SetOffset(0)
-	if err!=nil{
-		log.Fatal(err)
-	}
 
 	for {
 		m, err := r.ReadMessage(context.Background())
