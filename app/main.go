@@ -24,7 +24,7 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://root:rootpassword@mongodb_container:27017/?authSource=admin"))
+	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://root:rootpassword@mongodb_container:27017"))
 	if err!=nil {
 		log.Fatal(err)
 	}
