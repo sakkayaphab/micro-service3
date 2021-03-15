@@ -22,7 +22,7 @@ type Message struct {
 }
 
 func main() {
-	fmt.Println(os.Getenv("MONGO"))
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO")))
