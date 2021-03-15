@@ -24,12 +24,12 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://root:rootpassword@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false"))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://root:rootpassword@mongodb_container:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false"))
 	if err!=nil {
 		log.Fatal(err)
 	}
 	r := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:   []string{"localhost:9092"},
+		Brokers:   []string{"kafka:9092"},
 		Topic:     "message",
 		Partition: 0,
 		MinBytes:  10e3, // 10KB
