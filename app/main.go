@@ -33,8 +33,8 @@ func main() {
 	collection := client.Database("mydatabase").Collection("messages")
 	r := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:   []string{os.Getenv("KAFKA")},
+		GroupID:   "consumer-group-id",
 		Topic:     "message",
-		Partition: 0,
 		MinBytes:  10e3, // 10KB
 		MaxBytes:  10e6, // 10MB
 	})
